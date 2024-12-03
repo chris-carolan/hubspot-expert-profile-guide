@@ -20,10 +20,22 @@ jobs:
           node-version: 18
           cache: npm
           
-      - name: Install Dependencies
+      - name: Create React App
         run: |
-          npm install -g npm@latest
-          npm install
+          npx create-react-app .
+          npm install @tailwindcss/typography tailwindcss postcss autoprefixer --save
+        
+      - name: Copy Component Files
+        run: |
+          mkdir -p src/components
+          cp -R src/* backup/ || true
+          cp -R . source/ || true
+          rm -rf src/*
+          cp source/src/components/* src/components/ || true
+          cp source/src/App.js src/ || true
+          cp source/src/index.js src/ || true
+          cp source/src/index.css src/ || true
+          cp backup/* src/ || true
         
       - name: Build
         run: npm run build
