@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,19 +18,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
-      - name: Clean Install
-        run: |
-          rm -rf node_modules
-          rm -f package-lock.json
-          npm cache clean --force
-          npm install
+      - name: Install Dependencies
+        run: npm install
 
       - name: Build
         run: npm run build
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          folder: build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
