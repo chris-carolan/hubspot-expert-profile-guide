@@ -2,6 +2,7 @@
   "name": "hubspot-expert-profile-guide",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://chris-carolan.github.io/hubspot-expert-profile-guide",
   "dependencies": {
     "@tailwindcss/typography": "0.5.10",
     "react": "18.2.0",
@@ -11,7 +12,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
