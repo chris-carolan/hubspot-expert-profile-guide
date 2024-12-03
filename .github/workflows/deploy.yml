@@ -15,43 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Create Fresh React App
+      - name: Install and Build
         run: |
-          git config --global user.name "Chris Carolan"
-          git config --global user.email "chris.carolan@conveyingyourmessage.com"
-          npx create-react-app react-temp --template typescript
-          cd react-temp
-          npm install @tailwindcss/typography tailwindcss postcss autoprefixer --save
-          npm install gh-pages --save-dev
-          mkdir -p src/components
-
-      - name: Copy Custom Files
-        run: |
-          cp src/components/ProfileGuide.js react-temp/src/components/
-          echo 'import React from "react";
-import ProfileGuide from "./components/ProfileGuide";
-function App() { return (<div className="min-h-screen bg-gray-100 py-8"><ProfileGuide /></div>); }
-export default App;' > react-temp/src/App.tsx
-          echo '@tailwind base;
-@tailwind components;
-@tailwind utilities;' > react-temp/src/index.css
-
-      - name: Update package.json
-        run: |
-          cd react-temp
-          json -I -f package.json -e 'this.homepage="https://chris-carolan.github.io/hubspot-expert-profile-guide"'
-
-      - name: Build
-        run: |
-          cd react-temp
+          npm install
           npm run build
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: react-temp/build
+          folder: build
