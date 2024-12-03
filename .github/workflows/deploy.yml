@@ -18,30 +18,33 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: npm
-          
-      - name: Create React App
+
+      - name: Create temporary directory
         run: |
+          mkdir temp-app
+          cd temp-app
           npx create-react-app .
           npm install @tailwindcss/typography tailwindcss postcss autoprefixer --save
-        
-      - name: Copy Component Files
+          rm src/App.js src/index.js src/index.css
+          cd ..
+          
+      - name: Copy files
         run: |
+          cp -r temp-app/node_modules .
+          cp temp-app/package.json .
+          cp temp-app/package-lock.json .
           mkdir -p src/components
-          cp -R src/* backup/ || true
-          cp -R . source/ || true
-          rm -rf src/*
-          cp source/src/components/* src/components/ || true
-          cp source/src/App.js src/ || true
-          cp source/src/index.js src/ || true
-          cp source/src/index.css src/ || true
-          cp backup/* src/ || true
-        
+          cp src/components/ProfileGuide.js temp-app/src/components/
+          cp src/App.js temp-app/src/
+          cp src/index.js temp-app/src/
+          cp src/index.css temp-app/src/
+
       - name: Build
+        working-directory: temp-app
         run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: temp-app/build
